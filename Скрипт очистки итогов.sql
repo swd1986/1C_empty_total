@@ -1,14 +1,14 @@
---для даты + смещение
+п»ї--РґР»СЏ РґР°С‚С‹ + СЃРјРµС‰РµРЅРёРµ
 DECLARE @empty_date datetime, @1C_offset int, @1C_empty_date datetime;
 
--- дата, с которого будем резать
+-- РґР°С‚Р°, СЃ РєРѕС‚РѕСЂРѕРіРѕ Р±СѓРґРµРј СЂРµР·Р°С‚СЊ
 SET @empty_date='01.01.2010';
 SET @1C_offset=(select Offset from [dbo].[_YearOffset]);
--- получим дату с учетом смещения по 1С
+-- РїРѕР»СѓС‡РёРј РґР°С‚Сѓ СЃ СѓС‡РµС‚РѕРј СЃРјРµС‰РµРЅРёСЏ РїРѕ 1РЎ
 SET @1C_empty_date=dateadd(year,@1C_offset,@empty_date);
 
 --
--- цикл по трунке
+-- С†РёРєР» РїРѕ С‚СЂСѓРЅРєРµ
 DROP TABLE IF EXISTS #truncate_table;
 
 --debug
@@ -22,27 +22,27 @@ with structure as(
 ),
 
 truncate_table as (
---РН
-select distinct 'Регистры накопления' caption, * from structure
+--Р Рќ
+select distinct 'Р РµРіРёСЃС‚СЂС‹ РЅР°РєРѕРїР»РµРЅРёСЏ' caption, * from structure
 where PATINDEX('_AccumRg%', tablename)>0
 UNION
---РБ
-select distinct 'Регистры бухгалтерии' caption, * from structure
+--Р Р‘
+select distinct 'Р РµРіРёСЃС‚СЂС‹ Р±СѓС…РіР°Р»С‚РµСЂРёРё' caption, * from structure
 where PATINDEX('_AccRg%', tablename)>0
---Документы
---select distinct 'Документы', * from structure
+--Р”РѕРєСѓРјРµРЅС‚С‹
+--select distinct 'Р”РѕРєСѓРјРµРЅС‚С‹', * from structure
 --where PATINDEX('_Document%', tablename)>0
 --UNION
---Регистры сведений
---select distinct 'Регистры сведений', * from structure
+--Р РµРіРёСЃС‚СЂС‹ СЃРІРµРґРµРЅРёР№
+--select distinct 'Р РµРіРёСЃС‚СЂС‹ СЃРІРµРґРµРЅРёР№', * from structure
 --where PATINDEX('_InfoRg%', tablename)>0
 --UNION
---Последовательности документов
---select distinct 'Последовательности документов',* from structure
+--РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РґРѕРєСѓРјРµРЅС‚РѕРІ
+--select distinct 'РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РґРѕРєСѓРјРµРЅС‚РѕРІ',* from structure
 --where PATINDEX('_Seq%', tablename)>0
 --UNION
-----Журналы документов
---select distinct 'Журналы документов',* from structure
+----Р–СѓСЂРЅР°Р»С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ
+--select distinct 'Р–СѓСЂРЅР°Р»С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ',* from structure
 --where PATINDEX('_DocumentJournal%', tablename)>0
 --select * from [dbo].[DBSchema]
 --select * from [dbo].[_YearOffset]
@@ -60,7 +60,7 @@ FETCH NEXT
 FROM @cursor INTO @t
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	PRINT 'Трункаем таблицу: ' + @t
+	PRINT 'РўСЂСѓРЅРєР°РµРј С‚Р°Р±Р»РёС†Сѓ: ' + @t
 	declare @sql nvarchar(max);
 	set @sql = 'TRUNCATE TABLE '+ @t +';'
 	EXEC (@Sql);
