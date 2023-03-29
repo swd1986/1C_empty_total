@@ -22,10 +22,13 @@ with structure as(
 ),
 
 truncate_table as (
---справочники
+--РН
 select distinct 'Регистры накопления' caption, * from structure
 where PATINDEX('_AccumRg%', tablename)>0
---UNION
+UNION
+--РБ
+select distinct 'Регистры бухгалтерии' caption, * from structure
+where PATINDEX('_AccRg%', tablename)>0
 --Документы
 --select distinct 'Документы', * from structure
 --where PATINDEX('_Document%', tablename)>0
