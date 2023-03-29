@@ -8,19 +8,18 @@ SET @1C_offset=(select Offset from [dbo].[_YearOffset]);
 SET @1C_empty_date=dateadd(year,@1C_offset,@empty_date);
 
 --
--- цикл по трунке
+-- дропаем временные таблички
 DROP TABLE IF EXISTS #truncate_table;
-
---debug
---select @1C_empty_date
-
+-- получаем структуру
 with structure as(
 	SELECT      --*
 	t.name tablename
 	FROM        sys.columns c
 	JOIN        sys.tables  t   ON c.object_id = t.object_id
+	-- здесь возможно баг, надо текущую базу данных
 ),
 
+-- мусор приберем попозже
 truncate_table as (
 --РН
 select distinct 'Регистры накопления' caption, * from structure
@@ -47,7 +46,7 @@ where PATINDEX('_AccRg%', tablename)>0
 --select * from [dbo].[DBSchema]
 --select * from [dbo].[_YearOffset]
 )
-
+-- перенос во времянку для курсоров
 select tablename into #truncate_table from truncate_table;
 -- cursor
 DECLARE @cursor CURSOR;
@@ -55,6 +54,7 @@ DECLARE @t		NVARCHAR(max);
 SET @cursor = CURSOR FOR
 select * from #truncate_table
 
+-- проходим по таблицам 
 OPEN @cursor
 FETCH NEXT
 FROM @cursor INTO @t
